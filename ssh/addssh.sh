@@ -33,7 +33,7 @@ hariini=`date -d "0 days" +"%Y-%m-%d"`
 expi=`date -d "$masaaktif days" +"%Y-%m-%d"`
 echo -e ""
 echo -e "=============================="
-echo -e " SSH Account Details          "
+echo -e " SSH Account Details "
 echo -e "=============================="
 echo -e "IP/Host             : $IP"
 echo -e "Domain              : $domain"
