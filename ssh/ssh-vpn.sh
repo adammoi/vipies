@@ -14,16 +14,16 @@ LIGHT='\033[0;37m'
 MYIP=$(wget -qO- ipinfo.io/ip);
 # ==================================================
 # Link Hosting Kalian
-akbarvpn="raw.githubusercontent.com/adammoi/vipies/main/ssh"
+SSH="raw.githubusercontent.com/adammoi/vipies/main/ssh"
 
 # Link Hosting Kalian Untuk Xray
-akbarvpnn="raw.githubusercontent.com/adammoi/vipies/main/xray"
+XRAY="raw.githubusercontent.com/adammoi/vipies/main/xray"
 
 # Link Hosting Kalian Untuk Trojan Go
-akbarvpnnn="raw.githubusercontent.com/adammoi/vipies/main/trojango"
+TROJANGO="raw.githubusercontent.com/adammoi/vipies/main/trojango"
 
 # Link Hosting Kalian Untuk Stunnel5
-akbarvpnnnn="raw.githubusercontent.com/adammoi/vipies/main/stunnel5"
+STUNNEL5="raw.githubusercontent.com/adammoi/vipies/main/stunnel5"
 
 # initializing var
 export DEBIAN_FRONTEND=noninteractive
@@ -43,7 +43,7 @@ commonname=localhost
 email=adamspx17gmail.com
 
 # simple password minimal
-wget -O /etc/pam.d/common-password "https://${akbarvpn}/password"
+wget -O /etc/pam.d/common-password "https://${SSH}/password"
 chmod +x /etc/pam.d/common-password
 
 # go to root
@@ -142,8 +142,8 @@ echo "neofetch" >> .profile
 apt -y install nginx php php-fpm php-cli php-mysql libxml-parser-perl
 rm /etc/nginx/sites-enabled/default
 rm /etc/nginx/sites-available/default
-curl https://${akbarvpn}/nginx.conf > /etc/nginx/nginx.conf
-curl https://${akbarvpn}/vps.conf > /etc/nginx/conf.d/vps.conf
+curl https://${SSH}/nginx.conf > /etc/nginx/nginx.conf
+curl https://${SSH}/vps.conf > /etc/nginx/conf.d/vps.conf
 sed -i 's/listen = \/var\/run\/php-fpm.sock/listen = 127.0.0.1:9000/g' /etc/php/fpm/pool.d/www.conf
 useradd -m vps;
 mkdir -p /home/vps/public_html
@@ -151,13 +151,13 @@ echo "<?php phpinfo() ?>" > /home/vps/public_html/info.php
 chown -R www-data:www-data /home/vps/public_html
 chmod -R g+rw /home/vps/public_html
 cd /home/vps/public_html
-wget -O /home/vps/public_html/index.html "https://${akbarvpn}/index.html1"
+wget -O /home/vps/public_html/index.html "https://${SSH}/index.html1"
 /etc/init.d/nginx restart
 cd
 
 # install badvpn
 cd
-wget -O /usr/bin/badvpn-udpgw "https://${akbarvpn}/badvpn-udpgw64"
+wget -O /usr/bin/badvpn-udpgw "https://${SSH}/badvpn-udpgw64"
 chmod +x /usr/bin/badvpn-udpgw
 sed -i '$ i\screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7100 --max-clients 500' /etc/rc.local
 sed -i '$ i\screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7200 --max-clients 500' /etc/rc.local
@@ -183,11 +183,6 @@ echo "/bin/false" >> /etc/shells
 echo "/usr/sbin/nologin" >> /etc/shells
 /etc/init.d/dropbear restart
 
-# install squid
-cd
-apt -y install squid3
-wget -O /etc/squid/squid.conf "https://${akbarvpn}/squid3.conf"
-sed -i $MYIP2 /etc/squid/squid.conf
 
 # Install SSLH
 apt -y install sslh
@@ -227,9 +222,9 @@ systemctl restart sslh
 apt -y install vnstat
 /etc/init.d/vnstat restart
 apt -y install libsqlite3-dev
-wget https://humdi.net/vnstat/vnstat-2.6.tar.gz
-tar zxvf vnstat-2.6.tar.gz
-cd vnstat-2.6
+wget https://humdi.net/vnstat/vnstat-2.10.tar.gz
+tar zxvf vnstat-2.10.tar.gz
+cd vnstat-2.10
 ./configure --prefix=/usr --sysconfdir=/etc && make && make install
 cd
 vnstat -u -i $NET
@@ -237,12 +232,12 @@ sed -i 's/Interface "'""eth0""'"/Interface "'""$NET""'"/g' /etc/vnstat.conf
 chown vnstat:vnstat /var/lib/vnstat -R
 systemctl enable vnstat
 /etc/init.d/vnstat restart
-rm -f /root/vnstat-2.6.tar.gz
-rm -rf /root/vnstat-2.6
+rm -f /root/vnstat-2.10.tar.gz
+rm -rf /root/vnstat-2.10
 
 # install stunnel 5 
 cd /root/
-wget -q -O stunnel5.zip "https://${akbarvpnnnn}/stunnel5.zip"
+wget -q -O stunnel5.zip "https://${STUNNEL5}/stunnel5.zip"
 unzip -o stunnel5.zip
 cd /root/stunnel
 chmod +x configure
@@ -280,10 +275,10 @@ connect = 127.0.0.1:1194
 END
 
 # make a certificate
-#openssl genrsa -out key.pem 2048
-#openssl req -new -x509 -key key.pem -out cert.pem -days 1095 \
-#-subj "/C=$country/ST=$state/L=$locality/O=$organization/OU=$organizationalunit/CN=$commonname/emailAddress=$email"
-#cat key.pem cert.pem >> /etc/stunnel5/stunnel5.pem
+openssl genrsa -out key.pem 2048
+openssl req -new -x509 -key key.pem -out cert.pem -days 1095 \
+-subj "/C=$country/ST=$state/L=$locality/O=$organization/OU=$organizationalunit/CN=$commonname/emailAddress=$email"
+cat key.pem cert.pem >> /etc/stunnel/stunnel.pem
 
 # Service Stunnel5 systemctl restart stunnel5
 cat > /etc/systemd/system/stunnel5.service << END
@@ -302,20 +297,13 @@ WantedBy=multi-user.target
 END
 
 # Service Stunnel5 /etc/init.d/stunnel5
-wget -q -O /etc/init.d/stunnel5 "https://${akbarvpnnnn}/stunnel5.init"
+wget -q -O /etc/init.d/stunnel5 "https://${STUNNEL5}/stunnel5.init"
 
 # Ubah Izin Akses
 chmod 600 /etc/stunnel5/stunnel5.pem
 chmod +x /etc/init.d/stunnel5
 cp /usr/local/bin/stunnel /usr/local/bin/stunnel5
 
-# Remove File
-rm -r -f /usr/local/share/doc/stunnel/
-rm -r -f /usr/local/etc/stunnel/
-rm -f /usr/local/bin/stunnel
-rm -f /usr/local/bin/stunnel3
-rm -f /usr/local/bin/stunnel4
-#rm -f /usr/local/bin/stunnel5
 
 # Restart Stunnel 5
 systemctl stop stunnel5
@@ -326,12 +314,6 @@ systemctl restart stunnel5
 /etc/init.d/stunnel5 status
 /etc/init.d/stunnel5 restart
 
-#OpenVPN
-wget https://${akbarvpn}/vpn.sh &&  chmod +x vpn.sh && ./vpn.sh
-
-# install fail2ban
-apt -y install fail2ban
-
 # Instal DDOS Flate
 if [ -d '/usr/local/ddos' ]; then
 	echo; echo; echo "Please un-install the previous version first"
@@ -340,16 +322,36 @@ else
 	mkdir /usr/local/ddos
 fi
 clear
+echo; echo 'Installing DOS-Deflate 0.6'; echo
+echo; echo -n 'Downloading source files...'
+wget -q -O /usr/local/ddos/ddos.conf http://www.inetbase.com/scripts/ddos/ddos.conf
+echo -n '.'
+wget -q -O /usr/local/ddos/LICENSE http://www.inetbase.com/scripts/ddos/LICENSE
+echo -n '.'
+wget -q -O /usr/local/ddos/ignore.ip.list http://www.inetbase.com/scripts/ddos/ignore.ip.list
+echo -n '.'
+wget -q -O /usr/local/ddos/ddos.sh http://www.inetbase.com/scripts/ddos/ddos.sh
+chmod 0755 /usr/local/ddos/ddos.sh
+cp -s /usr/local/ddos/ddos.sh /usr/local/sbin/ddos
+echo '...done'
+echo; echo -n 'Creating cron to run script every minute.....(Default setting)'
+/usr/local/ddos/ddos.sh --cron > /dev/null 2>&1
+echo '.....done'
+echo; echo 'Installation has completed.'
+echo 'Config file is at /usr/local/ddos/ddos.conf'
 
 # banner /etc/issue.net
 #echo "Banner /etc/issue.net" >>/etc/ssh/sshd_config
 #sed -i 's@DROPBEAR_BANNER=""@DROPBEAR_BANNER="/etc/issue.net"@g' /etc/default/dropbear
 
 # Install BBR
-#wget https://${akbarvpn}/bbr.sh && chmod +x bbr.sh && ./bbr.sh
+wget https://${SSH}/bbr.sh && chmod +x bbr.sh && ./bbr.sh
 
 # Ganti Banner
-wget -O /etc/issue.net "https://${akbarvpn}/issue.net"
+wget -O /etc/issue.net "https://${SSH}/issue.net"
+
+# install fail2ban
+apt -y install fail2ban
 
 # blockir torrent
 iptables -A FORWARD -m string --string "get_peers" --algo bm -j DROP
@@ -370,66 +372,56 @@ netfilter-persistent reload
 
 # download script
 cd /usr/bin
-wget -O addhost "https://${akbarvpn}/addhost.sh"
-wget -O slhost "https://${akbarvpn}/slhost.sh"
-wget -O about "https://${akbarvpn}/about.sh"
-wget -O menu "https://raw.githubusercontent.com/adammoi/vipies/main/update/menu.sh"
-wget -O addssh "https://${akbarvpn}/addssh.sh"
-wget -O trialssh "https://${akbarvpn}/trialssh.sh"
-wget -O delssh "https://${akbarvpn}/delssh.sh"
-wget -O member "https://${akbarvpn}/member.sh"
-wget -O delexp "https://${akbarvpn}/delexp.sh"
-wget -O cekssh "https://${akbarvpn}/cekssh.sh"
-wget -O restart "https://${akbarvpn}/restart.sh"
-wget -O speedtest "https://${akbarvpn}/speedtest_cli.py"
-wget -O info "https://${akbarvpn}/info.sh"
-wget -O ram "https://${akbarvpn}/ram.sh"
-wget -O renewssh "https://${akbarvpn}/renewssh.sh"
-wget -O autokill "https://${akbarvpn}/autokill.sh"
-wget -O ceklim "https://${akbarvpn}/ceklim.sh"
-wget -O tendang "https://${akbarvpn}/tendang.sh"
-wget -O clearlog "https://${akbarvpn}/clearlog.sh"
-wget -O changeport "https://${akbarvpn}/changeport.sh"
-wget -O portovpn "https://${akbarvpn}/portovpn.sh"
-#wget -O portwg "https://${akbarvpn}/portwg.sh"
-wget -O porttrojan "https://${akbarvpn}/porttrojan.sh"
-#wget -O portsstp "https://${akbarvpn}/portsstp.sh"
-#wget -O portsquid "https://${akbarvpn}/portsquid.sh"
-wget -O portvlm "https://${akbarvpn}/portvlm.sh"
-wget -O wbmn "https://${akbarvpn}/webmin.sh"
-wget -O xp "https://${akbarvpn}/xp.sh"
-wget -O swapkvm "https://${akbarvpn}/swapkvm.sh"
-wget -O addvmess "https://${akbarvpnn}/addv2ray.sh"
-wget -O addvless "https://${akbarvpnn}/addvless.sh"
-wget -O addtrojan "https://${akbarvpnn}/addtrojan.sh"
-wget -O addgrpc "https://${akbarvpnn}/addgrpc.sh"
-wget -O cekgrpc "https://${akbarvpnn}/cekgrpc.sh"
-wget -O delgrpc "https://${akbarvpnn}/delgrpc.sh"
-wget -O renewgrpc "https://${akbarvpnn}/renewgrpc.sh"
-wget -O delvmess "https://${akbarvpnn}/delv2ray.sh"
-wget -O delvless "https://${akbarvpnn}/delvless.sh"
-wget -O deltrojan "https://${akbarvpnn}/deltrojan.sh"
-wget -O cekvmess "https://${akbarvpnn}/cekv2ray.sh"
-wget -O cekvless "https://${akbarvpnn}/cekvless.sh"
-wget -O cektrojan "https://${akbarvpnn}/cektrojan.sh"
-wget -O renewvmess "https://${akbarvpnn}/renewv2ray.sh"
-wget -O renewvless "https://${akbarvpnn}/renewvless.sh"
-wget -O renewtrojan "https://${akbarvpnn}/renewtrojan.sh"
-wget -O certv2ray "https://${akbarvpnn}/certv2ray.sh"
-wget -O addtrgo "https://${akbarvpnnn}/addtrgo.sh"
-wget -O deltrgo "https://${akbarvpnnn}/deltrgo.sh"
-wget -O renewtrgo "https://${akbarvpnnn}/renewtrgo.sh"
-wget -O cektrgo "https://${akbarvpnnn}/cektrgo.sh"
+#SSH
+wget -O addhost "https://${SSH}/addhost.sh"
+wget -O about "https://${SSH}/about.sh"
+wget -O menu "https://${SSH}/menu.sh"
+wget -O addssh "https://${SSH}/addssh.sh"
+wget -O trialssh "https://${SSH}/trialssh.sh"
+wget -O delssh "https://${SSH}/delssh.sh"
+wget -O member "https://${SSH}/member.sh"
+wget -O delexp "https://${SSH}/delexp.sh"
+wget -O cekssh "https://${SSH}/cekssh.sh"
+wget -O restart "https://${SSH}/restart.sh"
+wget -O speedtest "https://${SSH}/speedtest_cli.py"
+wget -O info "https://${SSH}/info.sh"
+wget -O ram "https://${SSH}/ram.sh"
+wget -O renewssh "https://${SSH}/renewssh.sh"
+wget -O autokill "https://${SSH}/autokill.sh"
+wget -O ceklim "https://${SSH}/ceklim.sh"
+wget -O tendang "https://${SSH}/tendang.sh"
+wget -O clearlog "https://${SSH}/clearlog.sh"
+wget -O changeport "https://${SSH}/changeport.sh"
+wget -O porttrojan "https://${SSH}/porttrojan.sh"
+wget -O portvlm "https://${SSH}/portvlm.sh"
+wget -O wbmn "https://${SSH}/webmin.sh"
+wget -O xp "https://${SSH}/xp.sh"
+wget -O swapkvm "https://${SSH}/swapkvm.sh"
+
+#XRAY
+wget -O addvmess "https://${XRAY}/addv2ray.sh"
+wget -O addvless "https://${XRAY}/addvless.sh"
+wget -O addtrojan "https://${XRAY}/addtrojan.sh"
+wget -O delvmess "https://${XRAY}/delv2ray.sh"
+wget -O delvless "https://${XRAY}/delvless.sh"
+wget -O deltrojan "https://${XRAY}/deltrojan.sh"
+wget -O cekvmess "https://${XRAY}/cekv2ray.sh"
+wget -O cekvless "https://${XRAY}/cekvless.sh"
+wget -O cektrojan "https://${XRAY}/cektrojan.sh"
+wget -O renewvmess "https://${XRAY}/renewv2ray.sh"
+wget -O renewvless "https://${XRAY}/renewvless.sh"
+wget -O renewtrojan "https://${XRAY}/renewtrojan.sh"
+wget -O certv2ray "https://${XRAY}/certv2ray.sh"
+
+#TROJAN GO
+wget -O addtrgo "https://${TROJANGO}/addtrgo.sh"
+wget -O deltrgo "https://${TROJANGO}/deltrgo.sh"
+wget -O renewtrgo "https://${TROJANGO}/renewtrgo.sh"
+wget -O cektrgo "https://${TROJANGO}/cektrgo.sh"
 wget -O portsshnontls "https://raw.githubusercontent.com/adammoi/vipies/main/websocket/portsshnontls.sh"
 wget -O portsshws "https://raw.githubusercontent.com/adammoi/vipies/main/websocket/portsshws.sh"
 
 wget -O sshovpnmenu "https://raw.githubusercontent.com/adammoi/vipies/main/update/sshovpn.sh"
-#wget -O l2tpmenu "https://raw.githubusercontent.com/adammoi/vipies/main/update/l2tpmenu.sh"
-#wget -O pptpmenu "https://raw.githubusercontent.com/adammoi/vipies/main/update/pptpmenu.sh"
-#wget -O sstpmenu "https://raw.githubusercontent.com/adammoi/vipies/main/update/sstpmenu.sh"
-#wget -O wgmenu "https://raw.githubusercontent.com/adammoi/vipies/main/update/wgmenu.sh"
-#wget -O ssmenu "https://raw.githubusercontent.com/adammoi/vipies/main/update/ssmenu.sh"
-#wget -O ssrmenu "https://raw.githubusercontent.com/adammoi/vipies/main/update/ssrmenu.sh"
 wget -O vmessmenu "https://raw.githubusercontent.com/adammoi/vipies/main/update/vmessmenu.sh"
 wget -O vlessmenu "https://raw.githubusercontent.com/adammoi/vipies/main/update/vlessmenu.sh"
 wget -O grpcmenu "https://raw.githubusercontent.com/adammoi/vipies/main/update/grpcmenu.sh"
@@ -437,19 +429,12 @@ wget -O grpcupdate "https://raw.githubusercontent.com/adammoi/vipies/main/update
 wget -O trmenu "https://raw.githubusercontent.com/adammoi/vipies/main/update/trmenu.sh"
 wget -O trgomenu "https://raw.githubusercontent.com/adammoi/vipies/main/update/trgomenu.sh"
 wget -O setmenu "https://raw.githubusercontent.com/adammoi/vipies/main/update/setmenu.sh"
-#wget -O slowdnsmenu "https://raw.githubusercontent.com/adammoi/vipies/main/update/slowdnsmenu.sh"
 wget -O running "https://raw.githubusercontent.com/adammoi/vipies/main/update/running.sh"
 wget -O updatemenu "https://raw.githubusercontent.com/adammoi/vipies/main/update/updatemenu.sh"
 
 
 chmod +x addhost
 chmod +x sshovpnmenu
-#chmod +x l2tpmenu
-#chmod +x pptpmenu
-#chmod +x sstpmenu
-#chmod +x wgmenu
-#chmod +x ssmenu
-#chmod +x ssrmenu
 chmod +x vmessmenu
 chmod +x vlessmenu
 chmod +x grpcmenu
@@ -457,7 +442,6 @@ chmod +x grpcupdate
 chmod +x trmenu
 chmod +x trgomenu
 chmod +x setmenu
-#chmod +x slowdnsmenu
 chmod +x running
 chmod +x updatemenu
 
@@ -485,10 +469,7 @@ chmod +x renewssh
 chmod +x clearlog
 chmod +x changeport
 chmod +x portovpn
-#chmod +x portwg
 chmod +x porttrojan
-#chmod +x portsstp
-#chmod +x portsquid
 chmod +x portvlm
 chmod +x wbmn
 chmod +x xp
@@ -550,8 +531,8 @@ history -c
 echo "unset HISTFILE" >> /etc/profile
 
 cd
-# rm -f /root/key.pem
-# rm -f /root/cert.pem
+rm -f /root/key.pem
+rm -f /root/cert.pem
 rm -f /root/ssh-vpn.sh
 
 # finihsing
