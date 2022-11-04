@@ -22,12 +22,15 @@ echo -e "${NC}${RED}Permission Denied!${NC}";
 echo -e "${NC}${LIGHT}Fuck You!!"
 exit 0
 fi
+
 clear
 echo -n > /tmp/other.txt
-data=( `cat /etc/xray/config.json | grep '^#&#' | cut -d ' ' -f 2`);
-echo "-----------------------------------------";
-echo "---------=[ Trojan User Login ]=---------";
-echo "-----------------------------------------";
+data=( `cat /etc/xray/config.json | grep '^#!' | cut -d ' ' -f 2 | sort | uniq`);
+
+echo -e "\033[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+echo -e "\E[44;1;39m       ⇱ Trojan User Login ⇲       \E[0m"
+echo -e "\033[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+
 for akun in "${data[@]}"
 do
 if [[ -z "$akun" ]]; then
@@ -58,8 +61,6 @@ fi
 rm -rf /tmp/iptrojan.txt
 done
 oth=$(cat /tmp/other.txt | sort | uniq | nl)
-echo "other";
 echo "$oth";
-echo "-----------------------------------------"
-echo "Script Mod By ADAM SIJA"
+echo -e "\033[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
 rm -rf /tmp/other.txt
