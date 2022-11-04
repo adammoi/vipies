@@ -1,180 +1,90 @@
-#!/bin/bash
-clear
-m="\033[0;1;36m"
-y="\033[0;1;37m"
-yy="\033[0;1;32m"
-yl="\033[0;1;33m"
-wh="\033[0m"
-
-echo -e "$y-------------------------------------------------------------$wh"
-echo -e "$y             Telegram : @Admmoi $wh"
-echo -e "$y           Premium Auto Script Mod By ADAM SIJA $wh"
-echo -e "$y-------------------------------------------------------------$wh"
-echo ""
-echo -e "$y SSH & OpenVPN $wh"
-echo -e "$y-------------------------------------------------------------$wh"
-echo -e "$yy 1$y.Create SSH & OpenVPN Account"
-echo -e "$yy 2$y.Generate SSH & OpenVPN Trial Account"
-echo -e "$yy 3$y.Extending SSH & OpenVPN Account Active Life"
-echo -e "$yy 4$y.Check User Login SSH & OpenVPN"
-echo -e "$yy 5$y.Daftar Member SSH & OpenVPN"
-echo -e "$yy 6$y.Delete SSH & OpenVpn Account"
-echo -e "$yy 7$y.Delete User Expired SSH & OpenVPN"
-echo -e "$yy 8$y.Set up Autokill SSH"
-echo -e "$yy 9$y.Displays Users Who Do Multi Login SSH"
-echo -e "$yy 10$y.Restart All Service"
-echo -e ""
-echo -e "$y XRAYS / VMESS $wh"
-echo -e "$y-------------------------------------------------------------$wh"
-echo -e "$yy 32$y.Create Account XRAYS Vmess Websocket"
-echo -e "$yy 33$y.Delete Account XRAYS Vmess Websocket"
-echo -e "$yy 34$y.Extending Account XRAYS Vmess Active Life"
-echo -e "$yy 35$y.Check User Login XRAYS Vmess"
-echo -e "$yy 36$y.Renew Certificate XRAYS Account"
-echo -e ""
-echo -e "$y XRAYS / VLESS $wh"
-echo -e "$y-------------------------------------------------------------$wh"
-echo -e "$yy 37$y.Create Account XRAYS Vless Websocket"
-echo -e "$yy 38$y.Delete Account XRAYS Vless Websocket"
-echo -e "$yy 39$y.Extending Account XRAYS Vless Active Life"
-echo -e "$yy 40$y.Check User Login XRAYS Vless"
-echo -e ""
-echo -e "$y XRAYS / TROJAN $wh"
-echo -e "$y-------------------------------------------------------------$wh"
-echo -e "$yy 41$y.Create Account XRAYS Trojan"
-echo -e "$yy 42$y.Delete Account XRAYS Trojan"
-echo -e "$yy 43$y.Extending Account XRAYS Trojan Active Life"
-echo -e "$yy 44$y.Check User Login XRAYS Trojan"
-echo -e ""
-echo -e "$y TROJAN GO $wh"
-echo -e "$y-------------------------------------------------------------$wh"
-echo -e "$yy 45$y.Create Account Trojan Go"
-echo -e "$yy 46$y.Delete Account Trojan Go"
-echo -e "$yy 47$y.Extending Account Trojan Go Active Life"
-echo -e "$yy 48$y.Check User Login Trojan Go"
-echo ""
-echo -e "$y SYSTEM $wh"
-echo -e "$y-------------------------------------------------------------$wh"
-echo -e "$yy 49$y.Add Or Change Subdomain Host For VPS"
-echo -e "$yy 50$y.Change Port Of Some Service"
-echo -e "$yy 51$y.Webmin Menu"
-echo -e "$yy 52$y.Check Usage of VPS Ram"
-echo -e "$yy 53$y.Reboot VPS"
-echo -e "$yy 54$y.Speedtest VPS"
-echo -e "$yy 55$y.Displaying System Information"
-echo -e "$yy 56$y.Info Script Auto Install"
-echo -e "$y-------------------------------------------------------------$wh"
-echo -e ""
-read -p "Select From Options [ 1 - 56 ] : " menu
-echo -e ""
-case $menu in
-1)
-addssh
-;;
-2)
-trialssh
-;;
-3)
-renewssh
-;;
-4)
-cekssh
-;;
-5)
-member
-;;
-6)
-delssh
-;;
-7)
-delexp
-;;
-8)
-autokill
-;;
-9)
-ceklim
-;;
-10)
-restart
-;;
-32)
-addvmess
-;;
-33)
-delvmess
-;;
-34)
-renewvmess
-;;
-35)
-cekvmess
-;;
-36)
-certv2ray
-;;
-37)
-addvless
-;;
-38)
-delvless
-;;
-39)
-renewvless
-;;
-40)
-cekvless
-;;
-41)
-addtrojan
-;;
-42)
-deltrojan
-;;
-43)
-renewtrojan
-;;
-44)
-cektrojan
-;;
-45)
-addtrgo
-;;
-46)
-deltrgo
-;;
-47)
-renewtrgo
-;;
-48)
-cektrgo
-;;
-49)
-addhost
-;;
-50)
-changeport
-;;
-51)
-wbmn
-;;
-52)
-ram
-;;
-53)
-reboot
-;;
-54)
-speedtest
-;;
-55)
-info
-;;
-56)
-about
-;;
-*)
-clear
-menu
-;;
+# Color Validation
+DF='\e[39m'
+Bold='\e[1m'
+Blink='\e[5m'
+yell='\e[33m'
+red='\e[31m'
+green='\e[32m'
+blue='\e[34m'
+PURPLE='\e[35m'
+cyan='\e[36m'
+Lred='\e[91m'
+Lgreen='\e[92m'
+Lyellow='\e[93m'
+NC='\e[0m'
+GREEN='\033[0;32m'
+ORANGE='\033[0;33m'
+LIGHT='\033[0;37m'
+# VPS Information
+#Domain
+domain=$(cat /etc/xray/domain)
+#Status certificate
+modifyTime=$(stat $HOME/.acme.sh/${domain}_ecc/${domain}.key | sed -n '7,6p' | awk '{print $2" "$3" "$4" "$5}')
+modifyTime1=$(date +%s -d "${modifyTime}")
+currentTime=$(date +%s)
+stampDiff=$(expr ${currentTime} - ${modifyTime1})
+days=$(expr ${stampDiff} / 86400)
+remainingDays=$(expr 90 - ${days})
+tlsStatus=${remainingDays}
+if [[ ${remainingDays} -le 0 ]]; then
+	tlsStatus="expired"
+fi
+# OS Uptime
+uptime="$(uptime -p | cut -d " " -f 2-10)"
+# Getting CPU Information
+ISP=$(curl -s ipinfo.io/org | cut -d " " -f 2-10 )
+CITY=$(curl -s ipinfo.io/city )
+WKT=$(curl -s ipinfo.io/timezone )
+DAY=$(date +%A)
+DATE=$(date +%m/%d/%Y)
+IPVPS=$(curl -s ipinfo.io/ip )
+tram=$( free -m | awk 'NR==2 {print $2}' )
+clear 
+echo -e "\e[33m                                                            \e[0m"
+echo -e "\e[33m ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+echo -e "		   	Bug ? Rebuild lagilah..."
+echo -e "\e[33m ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+echo -e " █████╗ ██████╗  █████╗ ███╗   ███╗    ███████╗██╗     ██╗ █████╗" 
+echo -e "██╔══██╗██╔══██╗██╔══██╗████╗ ████║    ██╔════╝██║     ██║██╔══██╗"
+echo -e "███████║██║  ██║███████║██╔████╔██║    ███████╗██║     ██║███████║"
+echo -e "██╔══██║██║  ██║██╔══██║██║╚██╔╝██║    ╚════██║██║██   ██║██╔══██║"
+echo -e "██║  ██║██████╔╝██║  ██║██║ ╚═╝ ██║    ███████║██║╚█████╔╝██║  ██║"
+echo -e "╚═╝  ╚═╝╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝    ╚══════╝╚═╝ ╚════╝ ╚═╝  ╚═╝"
+echo -e "\e[33m ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+echo -e "                                                                                         "
+echo -e "\e[33m Operating System     \e[0m:  "`hostnamectl | grep "Operating System" | cut -d ' ' -f5-`	
+echo -e "\e[33m Total Amount Of RAM  \e[0m:  $tram MB"
+echo -e "\e[33m System Uptime        \e[0m:  $uptime "
+echo -e "\e[33m Isp Name             \e[0m:  $ISP"
+echo -e "\e[33m City                 \e[0m:  $CITY"
+echo -e "\e[33m Domain               \e[0m:  $domain"	
+echo -e "\e[33m Ip Vps               \e[0m:  $IPVPS"
+echo -e "\e[33m Date	             \e[0m:  $DATE"
+echo -e "\e[33m ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+echo -e "                 • SCRIPT MENU •                 "
+echo -e "\e[33m ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+echo -e " [\e[36m•1\e[0m] SSH & OpenVPN Menu  [\e[36m•5\e[0m] SYSTEM Menu"
+echo -e " [\e[36m•2\e[0m] Vmess Menu          [\e[36m•6\e[0m] Status Service"
+echo -e " [\e[36m•3\e[0m] Vless Menu          [\e[36m•7\e[0m] Clear Log"
+echo -e " [\e[36m•4\e[0m] Trojan Go Menu      [\e[36m•8\e[0m] Trojan GFW Menu"                  
+echo -e   ""
+echo -e   " Press x or [ Ctrl+C ] • To-Exit-Script"
+echo -e   ""
+echo -e "\e[33m ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+echo -e " \e[33mClient Name    \E[0m: $Name"
+echo -e " \e[33mScript Expired \E[0m: $Exp2"
+echo -e "\e[33m ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+echo -e   ""
+read -p " Select menu :  "  opt
+echo -e   ""
+case $opt in
+1) clear ; m-sshovpn ;;
+2) clear ; m-vmess ;;
+3) clear ; m-vless ;;
+4) clear ; m-trgo ;;
+5) clear ; m-system ;;
+6) clear ; running ;;
+7) clear ; clear-log ;;
+8) clear ; m-trojan ;;
+x) exit ;;
 esac
