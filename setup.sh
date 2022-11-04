@@ -91,17 +91,16 @@ IZIN=$(wget -qO- ipinfo.io/ip);
 
 mkdir /var/lib/SIJA;
 echo "IP=" >> /var/lib/SIJA/ipvps.conf
+#SSH
 wget https://${SIJA}/ssh-vpn.sh && chmod +x ssh-vpn.sh && screen -S ssh-vpn ./ssh-vpn.sh
+#XRAY
 wget https://${XRAY}/ins-xray.sh && chmod +x ins-xray.sh && screen -S xray ./ins-xray.sh
 # Websocket
 wget https://${websocket}/edu.sh && chmod +x edu.sh && ./edu.sh
-#install xray grpc
-wget https://raw.githubusercontent.com/adammoi/vipies/main/grpc/sl-grpc.sh && chmod +x sl-grpc.sh && screen -S sl-grpc ./sl-grpc.sh
 
 rm -f /root/ssh-vpn.sh
 rm -f /root/ins-xray.sh
 rm -f /root/edu.sh
-rm -f /root/sl-grpc.sh
 
 
 echo "1.2" > /home/ver
@@ -119,14 +118,12 @@ echo "   - Dropbear                : 443, 109, 143"  | tee -a log-install.txt
 echo "   - Squid Proxy             : 3128, 8080"  | tee -a log-install.txt
 echo "   - Badvpn                  : 7100, 7200, 7300"  | tee -a log-install.txt
 echo "   - Nginx                   : 89"  | tee -a log-install.txt
-echo "   - XRAYS Vmess TLS         : 8443"  | tee -a log-install.txt
-echo "   - XRAYS Vmess None TLS    : 80"  | tee -a log-install.txt
-echo "   - XRAYS Vless TLS         : 8443"  | tee -a log-install.txt
-echo "   - XRAYS Vless None TLS    : 80"  | tee -a log-install.txt
-echo "   - XRAYS Trojan            : 2083"  | tee -a log-install.txt
+echo "   - XRAY Vmess TLS          : 8443"  | tee -a log-install.txt
+echo "   - XRAY Vmess None TLS     : 80"  | tee -a log-install.txt
+echo "   - XRAY Vless TLS          : 8443"  | tee -a log-install.txt
+echo "   - XRAY Vless None TLS     : 80"  | tee -a log-install.txt
+echo "   - XRAY Trojan             : 2083"  | tee -a log-install.txt
 echo "   - TrojanGo                : 2087"  | tee -a log-install.txt
-echo "   - XRAYS VMESS GRPC        : 1180"  | tee -a log-install.txt
-echo "   - XRAYS VLESS GRPC        : 2280"  | tee -a log-install.txt
 echo "   - Websocket TLS           : 443"  | tee -a log-install.txt
 echo "   - Websocket None TLS      : 8880"  | tee -a log-install.txt
 echo "   - Websocket Ovpn          : 2086"  | tee -a log-install.txt
