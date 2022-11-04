@@ -20,24 +20,10 @@ systemctl start sslh
 systemctl restart sslh
 /etc/init.d/sslh start
 /etc/init.d/sslh restart
-#systemctl restart ssrmu
 systemctl restart ws-tls
 systemctl restart ws-nontls
 systemctl restart xray.service
-systemctl restart sl-vless-grpc
-systemctl restart sl-vmess-grpc
-#systemctl restart shadowsocks-libev
-#systemctl restart xl2tpd
-#systemctl restart pptpd
-#systemctl restart ipsec
-#systemctl restart accel-ppp
-systemctl restart ws-ovpn
-#systemctl restart wg-quick@wg0
-#systemctl restart ssh-ohp
-#systemctl restart dropbear-ohp
-#systemctl restart openvpn-ohp
 systemctl restart trojan-go
-#/etc/init.d/ssrmu restart
 /etc/init.d/ssh restart
 /etc/init.d/dropbear restart
 /etc/init.d/sslh restart
