@@ -16,12 +16,11 @@ clear
 echo -e ""
 echo -e "======================================"
 echo -e ""
-echo -e "[1]. Change Port OpenVPN"
-echo -e "[2]. Change Port Vmess + Vless"
-echo -e "[3]. Change Port Trojan"
-echo -e "[4]. Change Port SSH WS HTTP"
-echo -e "[5]. Change Port SSH WS TLS / SSL"
-echo -e "[6]. Exit"
+echo -e "[1]. Change Port Vmess + Vless"
+echo -e "[2]. Change Port Trojan"
+echo -e "[3]. Change Port SSH WS HTTP"
+echo -e "[4]. Change Port SSH WS TLS / SSL"
+echo -e "[5]. Exit"
 echo -e ""
 echo -e "======================================"
 echo -e ""
@@ -29,21 +28,18 @@ read -p "Select From Options [ 1-6 ] : " port
 echo -e ""
 case $port in
 1)
-portovpn
-;;
-2)
 portvlm
 ;;
-3)
+2)
 porttrojan
 ;;
-4)
+3)
 portsshnontls
 ;;
-5)
+4)
 portsshws
 ;;
-6)
+5)
 clear
 menu
 ;;
