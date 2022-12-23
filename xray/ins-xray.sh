@@ -1,10 +1,5 @@
 #!/bin/bash
-echo -e "
-"
-date
-echo ""
 domain=$(cat /root/domain)
-sleep 1
 mkdir -p /etc/xray 
 echo -e "[ ${green}INFO${NC} ] Checking... "
 apt install iptables iptables-persistent -y
@@ -76,14 +71,7 @@ chmod +x /root/.acme.sh/acme.sh
 /root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256
 ~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/xray/xray.crt --keypath /etc/xray/xray.key --ecc
 
-uuid1=$(cat /proc/sys/kernel/random/uuid)
-uuid2=$(cat /proc/sys/kernel/random/uuid)
-uuid3=$(cat /proc/sys/kernel/random/uuid)
-uuid4=$(cat /proc/sys/kernel/random/uuid)
-uuid5=$(cat /proc/sys/kernel/random/uuid)
-uuid6=$(cat /proc/sys/kernel/random/uuid)
-uuid7=$(cat /proc/sys/kernel/random/uuid)
-
+uuid=$(cat /proc/sys/kernel/random/uuid)
 
 # // Certificate File
 path_crt="/etc/xray/xray.crt"
@@ -98,15 +86,15 @@ cat > /etc/xray/config.json << END
     "loglevel": "info"
   },
   "inbounds": [
+#xray-vmess-tls
     {
       "port": 8443,
       "protocol": "vmess",
       "settings": {
         "clients": [
           {
-            "id": "${uuid1}",
+            "id": "${uuid}",
             "alterId": 0
-#xray-vmess-tls
           }
         ]
       },
@@ -133,16 +121,16 @@ cat > /etc/xray/config.json << END
         "quicSettings": {}
       }
     },
+#xray-vmess-nontls
     {
-      "port": 80,
+      "port": 8080,
       "protocol": "vmess",
       "settings": {
         "clients": [
 
           {
-            "id": "${uuid2}",
+            "id": "${uuid}",
             "alterId": 0
-#xray-vmess-nontls
           }
         ]
       },
@@ -169,14 +157,14 @@ cat > /etc/xray/config.json << END
         ]
       }
     },
+#xray-vless-tls
     {
-      "port": 8443,
+      "port": 6443,
       "protocol": "vless",
       "settings": {
         "clients": [
           {
-            "id": "${uuid3}"
-#xray-vless-tls
+            "id": "${uuid}"
           }
         ],
         "decryption": "none"
@@ -212,14 +200,14 @@ cat > /etc/xray/config.json << END
         ]
       }
     },
+#xray-vless-nontls
     {
       "port": 80,
       "protocol": "vless",
       "settings": {
         "clients": [
           {
-            "id": "${uuid4}"
-#xray-vless-nontls
+            "id": "${uuid}"
           }
         ],
         "decryption": "none"
@@ -247,14 +235,14 @@ cat > /etc/xray/config.json << END
         ]
       }
     },
+#xray-trojan    
     {
       "port": 2083,
       "protocol": "trojan",
       "settings": {
         "clients": [
           {
-            "password": "${uuid5}"
-#xray-trojan
+            "password": "${uuid}"
           }
         ],
         "fallbacks": [
@@ -396,7 +384,11 @@ EOF
 # Accept port Xray
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 8443 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 8443 -j ACCEPT
-iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
+iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 6443 -j ACCEPT
+iptables -I INPUT -m state --state NEW -m udp -p udp --dport 6443 -j ACCEPT
+iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 8080 -j ACCEPT
+iptables -I INPUT -m state --state NEW -m udp -p udp --dport 8080 -j ACCEPT
+iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 8080 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 80 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 2083 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 2083 -j ACCEPT
