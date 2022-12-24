@@ -103,6 +103,7 @@ echo "   - XRAY Vmess None TLS     : 8080"  | tee -a log-install.txt
 echo "   - XRAY Vless TLS          : 6443"  | tee -a log-install.txt
 echo "   - XRAY Vless None TLS     : 80"  | tee -a log-install.txt
 echo "   - XRAY Trojan             : 2083"  | tee -a log-install.txt
+echo "   - TrojanGo                : 2087"  | tee -a log-install.txt
 echo "   - Websocket TLS           : 443"  | tee -a log-install.txt
 echo "   - Websocket None TLS      : 8880"  | tee -a log-install.txt
 echo "   - Websocket Ovpn          : 2086"  | tee -a log-install.txt
