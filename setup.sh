@@ -1,20 +1,4 @@
 #!/bin/bash
-if [ "${EUID}" -ne 0 ]; then
-		echo "You need to run this script as root"
-		exit 1
-fi
-if [ "$(systemd-detect-virt)" == "openvz" ]; then
-		echo "OpenVZ is not supported"
-		exit 1
-fi
-
-localip=$(hostname -I | cut -d\  -f1)
-hst=( `hostname` )
-dart=$(cat /etc/hosts | grep -w `hostname` | awk '{print $2}')
-if [[ "$hst" != "$dart" ]]; then
-echo "$localip $(hostname)" >> /etc/hosts
-fi
-
 mkdir -p /etc/xray
 touch /etc/xray/domain
 touch /etc/xray/scdomain
@@ -57,8 +41,11 @@ apt install git curl -y >/dev/null 2>&1
 apt install python -y >/dev/null 2>&1
 echo -e "[ ${GREEN}INFO${NC} ] Aight good ... installation file is ready"
 
+# Getting
+MYIP=$(wget -qO- ipinfo.io/ip);
+
 mkdir /var/lib/SIJA;
-echo "IP=" >> /var/lib/SIJA/ipvps.conf
+echo "${MYIP}" >> /var/lib/SIJA/ipvps.conf
 
 echo "Add Domain for vmess/vless/trojan dll"
 echo " "
@@ -71,7 +58,7 @@ read -rp "Input ur domain : " -e pp
         echo "$pp" > /root/scdomain
 	echo "$pp" > /etc/xray/scdomain
 	echo "$pp" > /etc/xray/domain
-	echo $pp > /root/domain
+	echo "$pp" > /root/domain
         echo "IP=$pp" > /var/lib/SIJA/ipvps.conf
     fi
 
@@ -83,14 +70,7 @@ XRAY="raw.githubusercontent.com/adammoi/vipies/main/xray"
 # Link Hosting Kalian Untuk Websocket
 Websocket="raw.githubusercontent.com/adammoi/vipies/main/websocket"
 
-# Getting
-MYIP=$(wget -qO- ipinfo.io/ip);
-echo "Checking VPS"
-IZIN=$(wget -qO- ipinfo.io/ip);
 
-
-mkdir /var/lib/SIJA;
-echo "IP=" >> /var/lib/SIJA/ipvps.conf
 #SSH
 wget https://${SIJA}/ssh-vpn.sh && chmod +x ssh-vpn.sh && screen -S ssh-vpn ./ssh-vpn.sh
 #XRAY
@@ -103,7 +83,7 @@ rm -f /root/ins-xray.sh
 rm -f /root/edu.sh
 
 
-echo "1.2" > /home/ver
+echo "3.0" > /home/ver
 echo " "
 echo "Installation has been completed!!"echo " "
 echo "============================================================================" | tee -a log-install.txt
@@ -119,11 +99,10 @@ echo "   - Squid Proxy             : 3128, 8080"  | tee -a log-install.txt
 echo "   - Badvpn                  : 7100, 7200, 7300"  | tee -a log-install.txt
 echo "   - Nginx                   : 89"  | tee -a log-install.txt
 echo "   - XRAY Vmess TLS          : 8443"  | tee -a log-install.txt
-echo "   - XRAY Vmess None TLS     : 80"  | tee -a log-install.txt
-echo "   - XRAY Vless TLS          : 8443"  | tee -a log-install.txt
+echo "   - XRAY Vmess None TLS     : 8080"  | tee -a log-install.txt
+echo "   - XRAY Vless TLS          : 6443"  | tee -a log-install.txt
 echo "   - XRAY Vless None TLS     : 80"  | tee -a log-install.txt
 echo "   - XRAY Trojan             : 2083"  | tee -a log-install.txt
-echo "   - TrojanGo                : 2087"  | tee -a log-install.txt
 echo "   - Websocket TLS           : 443"  | tee -a log-install.txt
 echo "   - Websocket None TLS      : 8880"  | tee -a log-install.txt
 echo "   - Websocket Ovpn          : 2086"  | tee -a log-install.txt
