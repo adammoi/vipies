@@ -64,7 +64,7 @@ case $opt in
 4) clear ; m-trgo ;;
 5) clear ; m-system ;;
 6) clear ; running ;;
-7) clear ; clear-log ;;
+7) clear ; clearlog ;;
 8) clear ; m-trojan ;;
 x) exit ;;
 esac
