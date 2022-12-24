@@ -1,28 +1,4 @@
 #!/bin/bash
-# SL
-# ==========================================
-# Color
-RED='\033[0;31m'
-NC='\033[0m'
-GREEN='\033[0;32m'
-ORANGE='\033[0;33m'
-BLUE='\033[0;34m'
-PURPLE='\033[0;35m'
-CYAN='\033[0;36m'
-LIGHT='\033[0;37m'
-# ==========================================
-# Getting
-MYIP=$(wget -qO- ipinfo.io/ip);
-echo "Checking VPS"
-IZIN=$( curl ipinfo.io/ip | grep $MYIP )
-if [ $MYIP = $MYIP ]; then
-echo -e "${NC}${GREEN}Permission Accepted...${NC}"
-else
-echo -e "${NC}${RED}Permission Denied!${NC}";
-echo -e "${NC}${LIGHT}Fuck You!!"
-fi
-clear
-echo " "
 echo " "
 
 if [ -e "/var/log/auth.log" ]; then
@@ -31,11 +7,13 @@ fi
 if [ -e "/var/log/secure" ]; then
         LOG="/var/log/secure";
 fi
-                
+               
 data=( `ps aux | grep -i dropbear | awk '{print $2}'`);
-echo "----------=[ Dropbear User Login ]=-----------";
+echo -e "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo -e "         Dropbear User Login       "
+echo -e "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "ID  |  Username  |  IP Address";
-echo "----------------------------------------------";
+echo -e "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 cat $LOG | grep -i dropbear | grep -i "Password auth succeeded" > /tmp/login-db.txt;
 for PID in "${data[@]}"
 do
@@ -45,12 +23,16 @@ do
         IP=`cat /tmp/login-db-pid.txt | awk '{print $12}'`;
         if [ $NUM -eq 1 ]; then
                 echo "$PID - $USER - $IP";
-                fi
+        fi
+echo -e "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
 done
 echo " "
-echo "----------=[ OpenSSH User Login ]=------------";
+echo -e "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo -e "          OpenSSH User Login       "
+echo -e "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "ID  |  Username  |  IP Address";
-echo "----------------------------------------------";
+echo -e "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 cat $LOG | grep -i sshd | grep -i "Accepted password for" > /tmp/login-db.txt
 data=( `ps aux | grep "\[priv\]" | sort -k 72 | awk '{print $2}'`);
 
@@ -63,26 +45,10 @@ do
         if [ $NUM -eq 1 ]; then
                 echo "$PID - $USER - $IP";
         fi
+echo -e "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
 done
-if [ -f "/etc/openvpn/server/openvpn-tcp.log" ]; then
-echo ""
-echo "---------=[ OpenVPN TCP User Login ]=---------";
-echo "Username  |  IP Address  |  Connected";
-echo "----------------------------------------------";
-        cat /etc/openvpn/server/openvpn-tcp.log | grep -w "^CLIENT_LIST" | cut -d ',' -f 2,3,8 | sed -e 's/,/      /g' > /tmp/vpn-login-tcp.txt
-        cat /tmp/vpn-login-tcp.txt
-fi
-echo "----------------------------------------------";
 
-if [ -f "/etc/openvpn/server/openvpn-udp.log" ]; then
-echo " "
-echo "---------=[ OpenVPN UDP User Login ]=---------";
-echo "Username  |  IP Address  |  Connected";
-echo "----------------------------------------------";
-        cat /etc/openvpn/server/openvpn-udp.log | grep -w "^CLIENT_LIST" | cut -d ',' -f 2,3,8 | sed -e 's/,/      /g' > /tmp/vpn-login-udp.txt
-        cat /tmp/vpn-login-udp.txt
-fi
-echo "----------------------------------------------";
-echo "Script Mod By ADAM SIJA"
-echo "";
+read -n 1 -s -r -p "Press any key to back on menu"
 
+menu
