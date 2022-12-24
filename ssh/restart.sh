@@ -1,25 +1,9 @@
 #!/bin/bash
-# SL
-# ==========================================
-# Color
-RED='\033[0;31m'
-NC='\033[0m'
-GREEN='\033[0;32m'
-ORANGE='\033[0;33m'
-BLUE='\033[0;34m'
-PURPLE='\033[0;35m'
-CYAN='\033[0;36m'
-LIGHT='\033[0;37m'
-# ==========================================
 clear
 echo -e ""
 echo -e "Starting Restart All Service"
-sleep 2
-systemctl stop ws-tls
-systemctl start sslh
+sleep 1
 systemctl restart sslh
-/etc/init.d/sslh start
-/etc/init.d/sslh restart
 systemctl restart ws-tls
 systemctl restart ws-nontls
 systemctl restart xray.service
@@ -36,4 +20,4 @@ systemctl restart trojan-go
 screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7100 --max-clients 1000
 screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7200 --max-clients 1000
 screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7300 --max-clients 1000
-echo -e "Restart All Service Berhasil"
+echo -e "Restart All Service Success"
